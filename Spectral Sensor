@@ -1,0 +1,77 @@
+#include "AS726X.h"
+
+AS726X sensor; //intialize the sensor
+
+void setup() {
+  
+  Wire.begin();
+  Serial.begin(115200); //Opens serial monitor at 115200 baud
+
+  sensor.begin();
+}
+
+void loop() {
+// intialize some variables
+float num = 10; //number of data values to take for the average
+float Violet = 0;
+float Blue = 0;
+float Green = 0;
+float Yellow = 0;
+
+  for (int i=0; i < num; i++){
+    //Collect the data and print out a summary
+    Serial.print(" Reading: V[");
+    float V = sensor.getCalibratedViolet();
+    Serial.print(V);
+    Serial.print("] B[");
+    float B = sensor.getCalibratedBlue();
+    Serial.print(B);
+    Serial.print("] G[");
+    float G = sensor.getCalibratedGreen();
+    Serial.print(G);
+    Serial.print("] Y[");
+    float Y = sensor.getCalibratedYellow();
+    Serial.print(Y);
+    Serial.print("]");
+    Serial.println();
+
+    //Calculate the average value over the loop
+    if (i != num-1){
+      Violet = Violet + V;
+      Blue = Blue + B;
+      Green = Green + G;
+      Yellow = Yellow + Y;
+    } else{
+      float avgViolet = 0;
+      float avgBlue = 0;
+      float avgGreen = 0;
+      float avgYellow = 0;
+
+      Violet = Violet + V;
+      Blue = Blue + B;
+      Green = Green + G;
+      Yellow = Yellow + Y;
+
+      avgViolet = Violet/num;
+      avgBlue = Blue/num;
+      avgGreen = Green/num;
+      avgYellow = Yellow/num;
+
+      //Print the Average into the serial monitor
+      Serial.print(" Average: V[");
+      Serial.print(avgViolet);
+      Serial.print("] B[");
+      Serial.print(avgBlue);
+      Serial.print("] G[");
+      Serial.print(avgGreen);
+      Serial.print("] Y[");
+      Serial.print(avgYellow);
+      Serial.print("]");
+      Serial.println();
+      Serial.println();
+
+    }
+}
+//Temporary delay until we determine what we want to do with this. 
+delay(10000);
+}
